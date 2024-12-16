@@ -11,11 +11,9 @@ env/
 *.env
 
 # Django
-db.sqlite3
+db.sqlite3               # Ignore local SQLite database (use a production database)
 *.log
-media/
-staticfiles/
-local_settings.py
+local_settings.py         # Ignore settings file that might contain sensitive information
 
 # Ignore migrations cache
 **/migrations/__pycache__/
@@ -34,10 +32,7 @@ Lib/
 Scripts/
 
 # Django app-specific directories
-absoncoWeb/media/
-absoncoWeb/static/
 absoncoWeb/core/migrations
-etc/
-share/
 
- pyvenv.cfg
+# Ignore virtual environment configuration file
+pyvenv.cfg

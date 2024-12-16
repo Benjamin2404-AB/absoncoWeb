@@ -1,0 +1,562 @@
+
+
+.navbar.navbar-expand-lg.navbar-light {
+    background-color: rgba(10, 4, 117, 0.98) !important;
+    /* background-color: #001e8e !important; */
+    /* background-image: linear-gradient(180deg, #001e8e 50%, #1d00d6 100%) !important; */
+    /* border-radius: 10px; */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px) !important;
+    width: 100% !important;
+    max-width: 99vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+}
+.navbar-brand{
+    font-family: Poppins !important;
+    color:white !important;
+
+    margin-left: 50px;
+}
+
+#navbarDropdownMenuLink{
+    font-family: Poppins !important;
+    color:white !important;
+    font-weight: 400px !important;
+}
+.navbar-nav{
+    font-family: Poppins !important;
+   
+    font-size: 15px !important;
+} 
+#navbarNavDropdown{
+    float:right !important;
+    color:white !important;
+}
+.navbar-nav .nav-link {
+    color: white !important; 
+    font-family: Nexa, sans-serif; 
+    font-size: 15px !important;
+    margin: 5px 15px !important;
+    font-weight: 400;
+    
+}
+.navbar-nav{
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: rgb(0, 187, 255) !important; 
+}
+
+.fa-user-circle{
+    font-size: 25px !important;
+    margin-top: 2px !important;
+    margin-right: 15px !important; 
+    /* padding:10px 5px !important; */
+    font-family: Poppins;
+    /* background-color: aquamarine !important; */
+    
+}
+.fa-shopping-cart{
+    font-size: 20px !important;
+     margin-top: 5px !important;
+    /*margin-left: 5px !important; */
+    padding:10px 5px !important;
+}
+#UserDetails {
+    margin-left: 70px;
+    width: auto;
+    display: flex;
+    align-items: center; 
+
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+
+#UserDetails h6 {
+    color: white !important;
+    font-family: Nexa;
+    font-weight: 700;
+    margin-right: 60px; 
+    margin-top:13px;
+
+    border-radius: 3px;
+}
+
+#UserDetails a{
+    text-decoration: none;
+    color: #020138;
+    
+}
+
+
+/* .nav-item button{
+    width: 80px !important;
+    font-family: Poppins !important;
+    font-size: 15px !important;
+    border:2px #0a0475 !important ;
+    border-radius: 2px solid  #030128 !important;
+    margin-top: 10px !important;
+    background-color: transparent !important;
+  
+}
+.nav-item .btn-light{
+    color: white !important;
+}
+.nav-item .btn-dark{
+    background-color: #050237 !important;
+    width:100px !important;
+    border-radius: 2px;
+    border: none !important;
+} */
+
+html,body{
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Searchbox */
+/* .SearchBox {
+    width: 100vw;
+    background-color: rgb(237, 237, 237);
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 10px;
+    font-family: Nexa, sans-serif;
+}
+
+.SearchBox .form-inline {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 5px; 
+    width: 20% !important;
+}
+
+.SearchBox .input-group {
+    height: 35px;
+    font-family: Nexa, sans-serif;
+    background-color: #08efdf;
+    width: 100px !important;
+} */
+.SearchBox {
+    width: 100vw;
+    background-color: rgb(237, 237, 237);
+    height: 80px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 10px;
+    font-family: Nexa, sans-serif;
+}
+
+.SearchBox .form-inline {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center; 
+}
+
+.SearchBox .input-group input {
+    height: 35px;
+    font-family: Nexa, sans-serif;
+    /* background-color: #08efdf; */
+    width: 50vw !important; 
+}
+
+
+.SearchBox button {
+    height: 35px;
+    font-family: Nexa, sans-serif;
+}
+
+.SearchBox .fa-shopping-cart {
+    margin-left: 10px;
+    font-size: 24px;
+}
+
+
+.fa-shopping-cart{
+    margin-left: 20px;
+    color : rgba(10, 4, 117, 0.98)
+}
+
+/* logo */
+nav .logo {
+    width: 10% !important;
+    height: auto!important;
+    object-fit: contain;
+    padding-left: 3px !important;
+    margin-left: 100px;
+}
+/* logo end */
+
+/* carousel slide */
+#carouselExampleSlidesOnly {
+    margin-top: 40px !important;
+    /* background-image: linear-gradient(rgba(18, 18, 18, 0.139),rgb(1, 1, 32))!important;   */
+    background-color: #fefefe !important;
+    width: 95vw !important;
+    height: 500px;  
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -30px;
+    padding:20px 20px 20px 20px; 
+    border: .5px solid rgb(243, 242, 242);
+    border-radius: 10px !important;
+    object-fit: contain;
+}
+/* #carouselExampleSlidesOnly img {
+    width:100% !important;  
+    height: 85% !important;     
+    max-height: 500px !important;  
+    object-fit: contain;         
+    margin-left: auto;           
+    margin-right: auto;         
+    display: block;
+    padding: 100px 0px !important;              
+} */
+.carousel-inner{
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 800px !important;
+    
+    height: 500px;
+    object-fit: fill !important;
+    /* background-color: brown !important; */
+
+}
+.carousel-inner .carousel-item.active {
+    height: 350px !important; 
+    object-fit: fill;
+ /* Set a fixed height for the carousel item */
+}
+.carousel-inner .carousel-item img {
+    width:auto !important;  
+    height: auto !important;     
+    /* max-height: 500px !important;   */
+    object-fit: cover !important;        
+    margin-left: auto;           
+    margin-right: auto;         
+    display: block;
+    padding: 0px 0px !important;    
+}
+
+
+/* carousel end */
+
+/* Top Picks */
+.cardtitles{
+    padding: 0px 30px;
+    margin-top: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Nexa;
+    /* opacity: 0; */
+     /* background-color: #020138  !important; */
+    width:80% !important;
+
+
+}
+/* Set a fixed height for all card images */
+.cardtitles .card-group{
+    width: 60vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    /* background-color: #75044a !important; */
+    display: flex;
+    margin-top: -20px;
+   
+    flex-wrap: wrap; 
+    justify-content: space-between;
+}
+.cardtitles .card-img-top {
+    width: 100%;                
+    height: 200px;             
+    object-fit: cover;  
+    /* background-color: rgb(243, 242, 242);        */
+    border: 0.5px solid rgba(0, 0, 0, 0.2)!important;
+    border-radius: 30px; 
+    
+    border-top-right-radius:25px !important;
+    border-top-left-radius: 25px !important;
+    /* padding: 40px 35px; */
+} 
+
+.card-group .card {
+    /* display: flex;
+    flex-direction: column;  */   
+    width: auto;
+    height:100px !important; 
+    margin-right: 50px; 
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px !important; 
+    border-radius: 25px !important;     
+    border:none !important;
+    font-family: Nexa !important;  
+    font-weight: 400;  
+    background-color: rgb(4, 3, 20) !important;
+    backdrop-filter: blur(30px);
+    transition: all ease-in-out .5s;
+    display: block;
+}
+#pcard:hover {
+   
+    height:450px !important; 
+}
+.card-group .card span{
+    color: white;
+    font-weight: 800;
+}
+.card-group .card strong{
+    color: #08efdf;
+}
+#cbody{
+    flex: 1;  
+    display: none !important; 
+    opacity: 0!important; 
+    transition: opacity 0.8s ease-in-out !important;  
+    color: rgb(255, 255, 255) !important; 
+}
+#pcard:hover  #cbody{
+    display: block !important; 
+    opacity: 1 !important;
+    
+}
+
+#tp {
+    position: relative;
+    width: 100%;
+    height: 200px;
+
+}
+
+#tp::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.849), rgba(0, 0, 0, 0.616));
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px; 
+    
+    border-top-right-radius:25px !important;
+    border-top-left-radius: 25px !important;
+    pointer-events: none; 
+}
+#pcard:hover #tp::before{
+    background: linear-gradient(75deg, rgba(0, 0, 0, 0.304), rgba(0, 0, 0, 0.235));
+}
+
+
+/* .cardtitles .card-body h4{
+ font-weight: 700;
+ display: none !important;   
+ opacity: 0;
+} */
+
+/* ---------------------------------- */
+
+/* banner */
+
+.banner{
+    height:400px;
+    width: 95%;
+     
+    /* background-color: #0a0475; */
+    margin-top: 200px !important;
+    font-family: Nexa;
+    margin-left: auto;
+    margin-right: auto;
+   
+}
+.banner .card-img-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.849), rgba(0, 0, 0, 0.616));
+    z-index: 1;
+}
+
+.banner .card-img{
+    height:550px !important;
+    width:auto !important;
+}
+/* Ensure the text appears above the gradient */
+/* .banner .card-img-overlay h5, 
+.card-img-overlay p {
+    position: relative;
+    z-index: 2;
+
+} */
+ /* .card-img-overlay h5{
+    font-weight: 600 !important;
+    font-size: 50px !important;
+    padding: 5px 20px !important;
+}
+.card-img-overlay p{
+    font-weight: 400 !important;
+    font-size: 30px !important;
+    padding: 5px 20px !important;
+    width:50% !important;
+
+
+}   */
+
+
+/* Featured Products */
+.prodFeatured{
+    width:100% !important;
+    /* display: inline-block !important; */
+    display: flexbox !important;
+    flex-direction: row !important;
+    margin-top: 250px;
+
+    padding: 0 20px;
+    font-family: Nexa;
+
+
+}
+
+.prodFeatured .card-deck{
+    width: 100%;
+    /* background-color: aqua; */
+}
+.prodFeatured .card-deck .card{
+    object-fit: contain;
+    
+    transition: .8s ease-in;
+}
+.prodFeatured a{
+    text-decoration: none !important;
+    transition: .6s ease-out !important;
+    color: black;
+
+}
+#prodHover a{
+    opacity: 0.8;
+}
+#prodHover:hover{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+
+}
+span{
+    color: #0a0475;
+    font-weight: 700;
+}
+span strong{
+    font-size: 25px !important;
+}
+
+.prodFeatured .card-deck .card img{
+    width:100%;
+    height:auto;
+    object-fit: contain;
+}
+
+.prodFeatured .card-deck{
+    /* background-color: #0a0475 !important; */
+    display: flex !important;
+    flex-wrap: wrap !important; 
+    flex: 1 1 auto !important;
+    justify-content: center !important; 
+    gap: 0px;
+}
+.imgholder {
+    height: 400px; 
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(1, 10, 101, 0.774);
+    border-radius: 8px;
+}
+
+.imgholder img {
+    width: 80%;
+    height: 50%; 
+    object-fit: contain; 
+}
+.prodFeatured .card-deck .card{
+    width:20%;
+    margin: 10px 15px;
+    
+}
+body{
+    min-height: 100vh;
+}
+
+
+/* Footer */
+
+.foot{
+    background-color: #020138;
+    font-family: Nexa;
+    height:500px;
+    color: white;
+    margin-top: auto;
+}
+.foot a{
+    text-decoration: none;
+    color: white;
+}
+.link-dark{
+    color: aliceblue !important;
+    z-index: 2 !important;
+}
+/* Copyright and svg  */
+svg{
+    fill: #ffffff !important;
+    width:30px;
+    margin: 0 auto;
+    margin-right: 30px;
+   
+    
+   
+}
+.card a{
+    text-decoration: none;
+    color:black;
+
+}
+#bot{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100vw !important;
+    height:40px;
+    border-top:.4px solid rgba(255, 255, 255, 0.655);
+    /* border-bottom:.8px solid white; */
+    /* background-color: aqua; */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+#copyright{
+    margin-top: 30px;
+    height: 20px;
+}
+.sm{
+   margin-top: 100px;
+    transform: translateX(-240px);
+}

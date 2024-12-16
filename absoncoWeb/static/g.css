@@ -1,0 +1,211 @@
+/* Base styling for html and body */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif; /* Modern font */
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Futuristic gradient background */
+    color: white;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Add padding for centered content */
+.content {
+    max-width: 1200px;
+    width: 100%;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px); /* More intense blur for glassmorphism effect */
+    border-radius: 20px;
+}
+
+/* Navbar customization */
+nav.navbar {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 30px;
+    width: 100%;
+    max-width: 1200px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-nav .nav-link {
+    color: white;
+    font-size: 16px;
+    margin: 0 20px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #00bbff;
+    transform: translateY(-3px);
+}
+
+.navbar-brand {
+    color: white;
+    font-size: 24px;
+    margin-left: 50px;
+    font-weight: bold;
+}
+
+/* Footer customization */
+.foot {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 30px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 15px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.foot a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.3s ease;
+}
+
+.foot a:hover {
+    color: #00bbff;
+}
+
+/* Buttons and inputs */
+button, input {
+    border-radius: 5px;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover, input:focus {
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Searchbox */
+.SearchBox {
+    width: 100vw;
+    background-color: rgba(237, 237, 237, 0.6);
+    height: 70px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Carousel */
+#carouselExampleSlidesOnly {
+    margin-top: 40px;
+    width: 95vw;
+    height: auto;
+    overflow: hidden;
+    border-radius: 15px;
+    object-fit: contain;
+}
+
+#carouselExampleSlidesOnly img {
+    width: 80%;
+    height: auto;
+    max-height: 800px;
+    object-fit: cover;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Featured Products */
+.prodFeatured {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: -50px;
+    padding: 0 20px;
+}
+
+.prodFeatured .card-deck {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.prodFeatured .card-deck .card {
+    width: 22%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+}
+
+.prodFeatured .card-deck .card:hover {
+    transform: translateY(-5px);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 15px 30px;
+}
+
+.prodFeatured .card-deck .card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Footer */
+.foot {
+    background-color: #020138;
+    font-family: 'Roboto', sans-serif;
+    height: 500px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.foot a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.foot a:hover {
+    color: #00bbff;
+}
+
+#bot {
+    width: 100%;
+    height: 40px;
+    border-top: 0.4px solid rgba(255, 255, 255, 0.655);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+/* Copyright and svg */
+svg {
+    fill: #ffffff;
+    width: 30px;
+    margin-right: 30px;
+}
+
+.card a {
+    text-decoration: none;
+    color: black;
+}
+
+#copyright {
+    margin-top: 30px;
+    height: 20px;
+}
