@@ -1,0 +1,41 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.Python
+
+# Virtual environment
+absonco/
+env/
+*.env
+
+# Django
+db.sqlite3
+*.log
+media/
+staticfiles/
+local_settings.py
+
+# Ignore migrations cache
+**/migrations/__pycache__/
+
+# VSCode and IDE files
+.vscode/
+.idea/
+
+# Secrets
+*.pem
+*.crt
+*.key
+
+# Other directories
+Lib/
+Scripts/
+
+# Django app-specific directories
+absoncoWeb/media/
+absoncoWeb/static/
+absoncoWeb/core/migrations
+etc/
+share/

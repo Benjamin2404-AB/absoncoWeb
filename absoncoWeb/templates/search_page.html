@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block content %}
+<h2 id='srHeader'>Search Results</h2>
+{% if items %}
+    <ul class = "sResults">
+        {% for item in items %}
+            <li>
+                <img src={{item.image.url}}/>
+                <div class="it">
+
+                <h3>{{ item.title }}</h3>
+                <h4 id='price'>{{ item.price|cedi }}</h4>
+                <p>{{ item.description }}</p>
+                </div>
+              
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            <!-- Previous Link (always visible but disabled on first page) -->
+            {% if page_obj.has_previous %}
+                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" id="prev">Prev</a>
+            {% else %}
+                <span class="disabled" id="prev">Prev</span>
+            {% endif %}
+    
+            <!-- Page Numbers -->
+            <span class="avpages">
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a href="?q={{ query }}&page={{ num }}" id="current">{{ num }}</a>
+                {% else %}
+                    <a href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            
+            </span>
+    
+            <!-- Next Link (always visible but disabled on last page) -->
+            {% if page_obj.has_next %}
+                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" id="next">Next</a>
+            {% else %}
+                <span class="disabled" id="next">Next</span>
+            {% endif %}
+        </span>
+    </div>
+    
+{% else %}
+    <p>No items found matching your search criteria.</p>
+{% endif %}
+{% endblock %}

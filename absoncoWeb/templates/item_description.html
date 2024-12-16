@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<div class="item-detail">
+    <div class="imgContainer"><img src="{{ item.image.url }}" alt="{{ item.title }}" class="desimg"></div>
+    <div class="item-detailTxt">
+        <h1>{{ item.title }}</h1>
+        {% if item.discountprice %}
+        <del>{{ item.price|cedi }}</del>
+        <h2>{{ item.discountprice|cedi }}</h2>
+        {% else %}
+        <h2>{{ item.price|cedi}}</h2>
+        <p>User is authenticated: {{ request.user.is_authenticated }}</p>
+        {% endif %}
+
+        <div class="cart-counter">  
+            <button class="minus">-</button>
+            <input type='number' id="display"placeholder='1'>
+            <button class="add">+</button>
+        </div>
+        <p>{{ item.description }}</p>
+    </div>
+</div>
+{% endblock %}

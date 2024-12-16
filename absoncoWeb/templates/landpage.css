@@ -1,0 +1,96 @@
+.navbar.navbar-expand-lg.navbar-light {
+    background-color: #0a0475 !important;
+}
+.navbar-brand{
+    font-family: Poppins !important;
+    color:white !important;
+
+    margin-left: 50px;
+}
+
+#navbarDropdownMenuLink{
+    font-family: Poppins !important;
+    color:white !important;
+    font-weight: 400px !important;
+}
+.navbar-nav{
+    font-family: Poppins !important;
+   
+    font-size: 15px !important;
+} 
+#navbarNavDropdown{
+    float:right !important;
+    color:white !important;
+}
+.navbar-nav .nav-link {
+    color: white !important; 
+    font-family: Poppins, sans-serif; 
+    font-size: 15px !important;
+    margin: 5px 15px !important;
+    
+}
+.navbar-nav{
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: rgb(0, 187, 255) !important; 
+}
+
+.fa-user-circle{
+    font-size: 25px !important;
+    margin-top: 2px !important;
+    /*margin-left: 5px !important; */
+    padding:10px 5px !important;
+    font-family: Poppins;
+    
+}
+.fa-shopping-cart{
+    font-size: 20px !important;
+     margin-top: 5px !important;
+    /*margin-left: 5px !important; */
+    padding:10px 5px !important;
+}
+#UserDetails{
+    margin-left: 250px;
+}
+/* .nav-item button{
+    width: 80px !important;
+    font-family: Poppins !important;
+    font-size: 15px !important;
+    border:2px #0a0475 !important ;
+    border-radius: 2px solid  #030128 !important;
+    margin-top: 10px !important;
+    background-color: transparent !important;
+  
+}
+.nav-item .btn-light{
+    color: white !important;
+}
+.nav-item .btn-dark{
+    background-color: #050237 !important;
+    width:100px !important;
+    border-radius: 2px;
+    border: none !important;
+} */
+
+
+
+.SearchBox{
+    width:100vw;
+    background-color: rgb(237, 237, 237);
+    height: 100px;
+    position: relative;
+    top: 50px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin:0 auto;
+    font-family:Poppins;
+}
+
+.SearchBox input {
+    margin : 5px 5px 2px 3px;
+}
+  

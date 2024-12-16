@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+<!---  **Navbar** -->
+
+{% block content %}
+  
+     <!-- landingpage image Slider -->
+     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="{% static 'lpimg1.jpg' %}" alt="First slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="{% static 'lpimg2.jpg' %}" alt="Second slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="{% static 'landingpageimg2.jpg' %}" alt="Third slide">
+        </div>
+      </div>
+    </div>
+
+    <!-- product cards -->
+    <div class="cardtitles">
+      <h4>Top Picks</h4>
+      <div class="card-group">
+        {% for item in dispitems %}
+        <div class="card" id='pcard' >
+          <a href="{% url 'core:item_description' item_slug=item.slug pk=item.id %}">
+            <div id= "tp"> <img  src="{{ item.image.url }}" class="card-img-top" alt="..."></div>
+            <div class="card-body" id='cbody'>
+              <h4 class="card-title"><span>{{ item.title }}</span></h4>
+              <h5 class="card-title"><span>{{ item.price | cedi}}</span></h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+
+
+    <!-- large image banner -->
+    <div class="banner">
+      <div class="card bg-dark text-white">
+        <img src="{% static 'printerBanner.jpg' %}" class="card-img" alt="...">
+        {% comment %} <div class="card-img-overlay">
+          <h5 class="card-title">Flash Deal</h5>
+          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. <br>This content is a little bit longer.</p>
+        </div> {% endcomment %}
+      </div>
+    </div>
+
+    <!-- Featured -->
+    <div class="prodFeatured">
+      <h3>Featured</h3>
+      <div class="card-deck">
+        {% for item in Featured %}
+        <div class="card" id="prodHover">
+          <a href="{% url 'core:item_description' item_slug=item.slug pk=item.id %}">
+            <div class="imgholder"><img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap"></div>
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <h6 class="card-title"><span>{{ item.price | cedi }}</span></h6>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+{% endblock content %}
