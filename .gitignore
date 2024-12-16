@@ -39,3 +39,5 @@ absoncoWeb/static/
 absoncoWeb/core/migrations
 etc/
 share/
+
+ pyvenv.cfg
