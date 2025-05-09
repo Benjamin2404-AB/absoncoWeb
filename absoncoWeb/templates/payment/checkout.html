@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="text-center" style="color: #01039D; font-family: 'Geist', sans-serif; font-weight: 500;">Checkout</h2>
+    <div class="card p-4" style="max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+        <h4 style="color: #01039D; font-weight: 400;">Order Summary</h4>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% if error %}
+            <div class="alert alert-warning text-center">{{ error }}</div>
+        {% elif not order.items.exists %}
+            <div class="alert alert-warning text-center">Your cart is empty.</div>
+        {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_item in order.items.all %}
+                    <tr>
+                        <td>{{ order_item.item.title }}</td>
+                        <td>{{ order_item.quantity }}</td>
+                        <td>{{ order_item.item.discountprice|default:order_item.item.price|cedi }}</td>
+                        <td>{{ order_item.get_total_price|cedi }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>{{ cart_total|cedi }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+            {% if cart_total == 0 %}
+                <div class="alert alert-danger text-center">Error: Total is zero. Please check your cart items.</div>
+            {% else %}
+                <form id="checkout-form" method="POST" action="{% url 'payment:create_checkout_session' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn w-100" style="background-color: #42A5F5; color: #000000; font-family: 'Geist', sans-serif; font-weight: 400; border-radius: 1rem; transition: all 0.3s ease;">
+                        Pay with Paystack
+                    </button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            try {
+                const response = await fetch('{% url "payment:create_checkout_session" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({}),
+                });
+                const data = await response.json();
+                if (data.authorization_url && data.reference) {
+                    // Redirect to Paystack payment page
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert(data.error || 'Error initiating payment.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
+</script>
+{% endblock %}

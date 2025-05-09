@@ -1,25 +1,353 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_filters %}
-{% block content %}
-<div class="item-detail">
-    <div class="imgContainer"><img src="{{ item.image.url }}" alt="{{ item.title }}" class="desimg"></div>
-    <div class="item-detailTxt">
-        <h1>{{ item.title }}</h1>
-        {% if item.discountprice %}
-        <del>{{ item.price|cedi }}</del>
-        <h2>{{ item.discountprice|cedi }}</h2>
-        {% else %}
-        <h2>{{ item.price|cedi}}</h2>
-        <p>User is authenticated: {{ request.user.is_authenticated }}</p>
-        {% endif %}
 
-        <div class="cart-counter">  
-            <button class="minus">-</button>
-            <input type='number' id="display"placeholder='1'>
-            <button class="add">+</button>
+{% block content %}
+<div class="item-detail container my-5">
+    <div class="row g-3"> <!-- Reduced gap to match landing page -->
+        <!-- Image Section -->
+        <div class="col-lg-6">
+            <div class="imgContainer shadow-sm rounded">
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="desimg w-100">
+            </div>
         </div>
-        <p>{{ item.description }}</p>
+
+        <!-- Details Section -->
+        <div class="col-lg-6 item-detailTxt">
+            <h1 class="fw-bold mb-3">{{ item.title }}</h1>
+            <div class="price-section mb-3"> <!-- Reduced margin -->
+                {% if item.discountprice %}
+                    <del class="text-muted me-2">{{ item.price|cedi }}</del>
+                    <h2 class="d-inline text-primary">{{ item.discountprice|cedi }}</h2>
+                {% else %}
+                    <h2 class="text-primary">{{ item.price|cedi }}</h2>
+                {% endif %}
+            </div>
+
+            <div class="d-flex align-items-center mb-3"> <!-- Reduced margin -->
+                <!-- Quantity Selector -->
+                <div class="cart-counter me-3">
+                    <button class="btn btn-outline-secondary btn-sm minus">-</button>
+                    <input type="number" id="display" value="1" placeholder="1" class="form-control d-inline-block text-center" style="width: 60px;">
+                    <button class="btn btn-outline-secondary btn-sm add">+</button>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button id="addToCart" class="btn btn-warning add-to-cart-btn">Add to Cart</button>
+            </div>
+
+            <p class="text-muted">{{ item.description }}</p>
+        </div>
     </div>
 </div>
+
+<!-- Snackbar Container -->
+<div id="snackbar" class="snackbar"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let quantityInput = document.getElementById('display');
+        let minusBtn = document.querySelector('.minus');
+        let addBtn = document.querySelector('.add');
+        let addToCartBtn = document.getElementById('addToCart');
+        let cartCountElement = document.getElementById('cart-count');
+        let snackbar = document.getElementById('snackbar');
+        const isAuthenticated = {{ user.is_authenticated|lower }};
+
+        // Function to show Snackbar
+        function showSnackbar(message, type) {
+            snackbar.textContent = message;
+            snackbar.className = `snackbar show ${type}`;
+            setTimeout(() => {
+                snackbar.className = 'snackbar';
+            }, 3000);
+        }
+
+        // Prevent negative or zero values in quantity input
+        quantityInput.addEventListener('input', function() {
+            if (quantityInput.value < 1) {
+                quantityInput.value = 1;
+            }
+        });
+
+        // Handle minus button click
+        minusBtn.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value, 10);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        });
+
+        // Handle add button click
+        addBtn.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value, 10);
+            quantityInput.value = currentValue + 1;
+        });
+
+        // Handle adding to cart
+        addToCartBtn.addEventListener('click', function() {
+            if (!isAuthenticated) {
+                showSnackbar('Please log in to add items to your cart.', 'error');
+                setTimeout(() => {
+                    window.location.href = "{% url 'account_login' %}?next=" + encodeURIComponent(window.location.pathname);
+                }, 1500);
+                return;
+            }
+
+            let quantity = parseInt(quantityInput.value, 10);
+            let itemSlug = "{{ item.slug }}";
+            let itemId = "{{ item.id }}";
+            let itemTitle = "{{ item.title }}";
+
+            fetch("{% url 'core:add_to_cart' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (cartCountElement) {
+                        cartCountElement.textContent = data.total_items;
+                    }
+                    showSnackbar(`Added ${data.item.quantity} x ${itemTitle} to your cart!`, 'success');
+                } else {
+                    showSnackbar(data.message || "Something went wrong!", 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error adding to cart:', error);
+                showSnackbar("An error occurred while adding to the cart.", 'error');
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Item Detail Container */
+    .item-detail {
+        max-width: 90%;
+        margin: 0 auto;
+        padding: 1rem; /* Match landing page's compact padding */
+    }
+
+    /* Image Styling */
+    .imgContainer {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        border: 1px solid transparent; /* For cyan border on hover */
+    }
+    .imgContainer:hover {
+        transform: scale(1.03); /* Match landing page product card scale */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Match landing page shadow */
+        border-color: #00CED1; /* Cyan border on hover */
+    }
+    .desimg {
+        max-height: 400px; /* Reduced to match landing page's zoomed-out feel */
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* Text Section Styling */
+    .item-detailTxt h1 {
+        color: #01039D; /* Deep blue for headings */
+        font-weight: 700;
+        font-size: 1.75rem; /* Reduced to match landing page's zoomed-out feel */
+        margin-bottom: 0.75rem; /* Reduced margin */
+    }
+    .price-section h2 {
+        color: #01039D; /* Deep blue for price */
+        font-weight: 600;
+        font-size: 1.25rem; /* Reduced to match landing page */
+    }
+    .price-section del {
+        color: #6c757d;
+        font-size: 1rem; /* Reduced to match landing page */
+    }
+    .item-detailTxt p {
+        color: #6c757d;
+        font-size: 0.9rem; /* Reduced to match landing page */
+        line-height: 1.6;
+    }
+
+    /* Quantity Selector */
+    .cart-counter {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Match landing page's reduced gap */
+    }
+    .cart-counter .btn {
+        width: 35px; /* Match landing page icon size */
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem; /* Match landing page icon size */
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .cart-counter .btn:hover {
+        background-color: #01039D;
+        color: #FFFFFF;
+        border-color: #01039D;
+        transform: scale(1.05); /* Match landing page icon hover effect */
+    }
+    .cart-counter input {
+        height: 35px; /* Match button height */
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        font-size: 0.9rem; /* Reduced to match landing page */
+    }
+
+    /* Add to Cart Button */
+    .btn-warning {
+        background-color: #42A5F5; /* Lighter blue to match landing page */
+        border-color: #42A5F5;
+        color: #000000;
+        font-weight: 400;
+        padding: 0.5rem 1.5rem; /* Match landing page button padding */
+        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        position: relative; /* For pseudo-elements */
+    }
+    .btn-warning:hover {
+        background-color: #1E90FF; /* Match landing page hover */
+        border-color: #1E90FF;
+        color: #000000;
+        box-shadow: 0 0 8px rgba(0, 206, 209, 0.5); /* Cyan glow on hover */
+    }
+    .add-to-cart-btn {
+        overflow: hidden;
+    }
+    .add-to-cart-btn::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #00CED1; /* Cyan underline */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    .add-to-cart-btn:hover::after {
+        transform: translateX(0);
+    }
+
+    /* Snackbar Styling */
+    .snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        font-size: 0.9rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: visibility 0s, opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .snackbar.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    .snackbar.success {
+        background-color: #28a745; /* Green for success */
+    }
+    .snackbar.error {
+        background-color: #dc3545; /* Red for error */
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 575.98px) {
+        .item-detail {
+            max-width: 95%;
+            padding: 0.75rem; /* Match landing page mobile padding */
+        }
+        .desimg {
+            max-height: 250px; /* Further reduced for mobile */
+        }
+        .item-detailTxt h1 {
+            font-size: 1.25rem; /* Match landing page mobile */
+        }
+        .price-section h2 {
+            font-size: 1rem; /* Match landing page mobile */
+        }
+        .price-section del {
+            font-size: 0.85rem; /* Match landing page mobile */
+        }
+        .item-detailTxt p {
+            font-size: 0.8rem; /* Match landing page mobile */
+        }
+        .cart-counter .btn {
+            width: 30px; /* Match landing page mobile */
+            height: 30px;
+            font-size: 0.9rem;
+        }
+        .cart-counter input {
+            width: 50px;
+            height: 30px;
+            font-size: 0.85rem;
+        }
+        .btn-warning {
+            padding: 0.4rem 1rem; /* Match landing page mobile */
+            font-size: 0.85rem;
+        }
+        .snackbar {
+            min-width: 200px;
+            font-size: 0.8rem;
+            padding: 12px;
+            bottom: 20px;
+        }
+    }
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .item-detail {
+            max-width: 90%;
+        }
+        .desimg {
+            max-height: 300px; /* Match landing page */
+        }
+        .item-detailTxt h1 {
+            font-size: 1.5rem;
+        }
+        .price-section h2 {
+            font-size: 1.1rem;
+        }
+        .price-section del {
+            font-size: 0.9rem;
+        }
+        .item-detailTxt p {
+            font-size: 0.85rem;
+        }
+        .snackbar {
+            min-width: 220px;
+            font-size: 0.85rem;
+        }
+    }
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+        .desimg {
+            max-height: 350px; /* Match landing page */
+        }
+        .item-detailTxt h1 {
+            font-size: 1.5rem;
+        }
+        .price-section h2 {
+            font-size: 1.1rem;
+        }
+        .snackbar {
+            min-width: 240px;
+        }
+    }
+</style>
 {% endblock %}

@@ -21,7 +21,7 @@ gsap.fromTo(
       start: 'top 80%', // When it enters viewport
       end: 'bottom 50%', // When the animation should finish
       scrub: 1, // Smoother scrolling
-      markers: true // Debugging markers
+      markers: false // Debugging markers
     }
   }
 );

@@ -36,3 +36,7 @@ absoncoWeb/core/migrations
 
 # Ignore virtual environment configuration file
 pyvenv.cfg
+
+
+# Ignore env
+.env

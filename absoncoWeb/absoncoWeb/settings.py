@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,20 +32,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-#static files
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# static files configuration
 STATIC_URL = '/static/'
-#TATICFILES_DIRS = [BASE_DIR / "static"]
+
+# For development, specify the directories where static files can be found
 if DEBUG:
-        STATICFILES_DIRS = [
-            os.path.join(BASE_DIR, 'static')
-       ]
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),  # Path to your custom static files
+    ]
 else:
+    # For production, collect static files into this directory
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-#Media files
-MEDIA_URL = '/media/'  # URL prefix for media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+# media files configuration (for user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Application definition
 
@@ -53,8 +60,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'allauth',
+    'allauth_ui',
+    'widget_tweaks',
+    'slippers',
     'allauth.account',
+    'debug_toolbar',
+    'payment',
+    
+    # 'allauth.socialaccount',
+    
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
 ]
+
+# settings.py
+ALLAUTH_UI_THEME = "light"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,7 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-      "allauth.account.middleware.AccountMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'absoncoWeb.urls'
@@ -72,7 +94,7 @@ ROOT_URLCONF = 'absoncoWeb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),os.path.join(BASE_DIR, 'templates','account')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.cart_count',  # Custom context processor
             ],
             'libraries':{
             'custom_filters': 'core.templatetag.custom_filters',
@@ -137,7 +160,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -153,3 +176,59 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 1
+# For email verification
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Redirect after login
+
+
+
+
+
+# PAYSTACK_PUBLISHABLE_KEY = os.environ.get('PAYSTACK_PUBLISHABLE_KEY')
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+PAYMENT_SUCCESS_URL = 'http://localhost:8000/payment/success/'
+PAYMENT_CANCEL_URL = 'http://localhost:8000/payment/cancel/'
+
+
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+LOGIN_REDIRECT_URL = '/' 
+# EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  # Your Gmail address
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') # Not your regular password
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+            # 'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+   
+    # Add other providers as needed
+}
+
+
+SOCIALACCOUNT_ADAPTER = 'absoncoWeb.adapters.CustomSocialAccountAdapter'

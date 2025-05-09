@@ -1,0 +1,150 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'styles/auth-pages.css' %}">
+{% endblock %}
+
+{% block head_title %}
+  {% trans "Sign Up" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card" role="form">
+    <div class="auth-header">
+      <h1 class="auth-title">{% trans "Create an Account" %}</h1>
+      <p class="auth-subtitle">
+        {% blocktranslate %}
+          Already have an account? <a href="{{ login_url }}" class="auth-link">Sign in</a>
+        {% endblocktranslate %}
+      </p>
+    </div>
+
+    {% url 'account_signup' as signup_url %}
+    <form method="post" action="{{ signup_url }}" class="auth-form" id="signup-form" aria-labelledby="signup-title">
+      {% csrf_token %}
+      
+      <div class="form-field">
+        <label for="id_email">{% trans "Email" %}</label>
+        <input type="email" name="email" placeholder="{% trans 'your.email@example.com' %}" id="id_email" autocomplete="email" required aria-describedby="email-error">
+        {% if form.email.errors %}
+          <ul class="errorlist" id="email-error">
+            {% for error in form.email.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      
+      <div class="form-field">
+        <label for="id_username">{% trans "Username" %}</label>
+        <input type="text" name="username" placeholder="{% trans 'Choose a username' %}" id="id_username" autocomplete="username" required aria-describedby="username-error">
+        {% if form.username.errors %}
+          <ul class="errorlist" id="username-error">
+            {% for error in form.username.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      
+      <div class="form-field">
+        <label for="id_password1">{% trans "Password" %}</label>
+        <input type="password" name="password1" placeholder="{% trans 'Create a password' %}" id="id_password1" required aria-describedby="password1-error">
+        {% if form.password1.errors %}
+          <ul class="errorlist" id="password1-error">
+            {% for error in form.password1.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="password-requirements compact">
+          <p>{% trans "Your password must:" %}</p>
+          <ul>
+            <li>{% trans "Be at least 8 characters long" %}</li>
+            <li>{% trans "Not be too common or similar to your personal information" %}</li>
+            <li>{% trans "Contain at least one number or special character" %}</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <label for="id_password2">{% trans "Confirm Password" %}</label>
+        <input type="password" name="password2" placeholder="{% trans 'Confirm your password' %}" id="id_password2" required aria-describedby="password2-error">
+        {% if form.password2.errors %}
+          <ul class="errorlist" id="password2-error">
+            {% for error in form.password2.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+      {% endif %}
+      
+      <div class="form-field checkbox">
+        <input type="checkbox" name="terms_accepted" id="id_terms_accepted" required aria-describedby="terms-error">
+        <label for="id_terms_accepted">
+          {% blocktranslate %}
+            I agree to the <a href="/terms/" class="auth-link" target="_blank">Terms of Service</a> and <a href="/privacy/" class="auth-link" target="_blank">Privacy Policy</a>
+          {% endblocktranslate %}
+        </label>
+        {% if form.terms_accepted.errors %}
+          <ul class="errorlist" id="terms-error">
+            {% for error in form.terms_accepted.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      
+      <button type="submit" class="auth-button">{% trans "Sign Up" %}</button>
+    </form>
+
+    {% if SOCIALACCOUNT_ENABLED %}
+      <div class="social-auth-divider">
+        <span>{% trans "OR" %}</span>
+      </div>
+      <div class="social-auth-buttons">
+        {% include "socialaccount/snippets/login.html" with process="signup" %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'authpages.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('signup-form');
+      const inputs = form.querySelectorAll('input:not([type="checkbox"])');
+
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          if (this.value.trim()) {
+            this.classList.add('filled');
+          } else {
+            this.classList.remove('filled');
+          }
+        });
+
+        // Add valid/invalid classes based on browser validation
+        input.addEventListener('change', function() {
+          if (this.checkValidity()) {
+            this.classList.add('valid');
+            this.classList.remove('error');
+          } else {
+            this.classList.add('error');
+            this.classList.remove('valid');
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

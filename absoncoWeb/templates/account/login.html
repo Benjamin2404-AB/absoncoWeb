@@ -1,0 +1,96 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'styles/auth-pages.css' %}">
+{% endblock %}
+
+{% block head_title %}
+  {% trans "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">{% trans "Sign In" %}</h1>
+      {% if not SOCIALACCOUNT_ONLY %}
+        <p class="auth-subtitle">
+          {% blocktranslate %}
+            Don't have an account? <a href="{{ signup_url }}" class="auth-link">Sign up</a>
+          {% endblocktranslate %}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if not SOCIALACCOUNT_ONLY %}
+      {% url 'account_login' as login_url %}
+      <form method="post" action="{{ login_url }}" class="auth-form">
+        {% csrf_token %}
+        
+        <div class="form-field">
+          <label for="id_login">Email or Username</label>
+          <input type="text" name="login" placeholder="Email or Username" id="id_login" autocomplete="email" required>
+        </div>
+        
+        <div class="form-field">
+          <label for="id_password">Password</label>
+          <input type="password" name="password" placeholder="Password" id="id_password" required>
+          <a href="{% url 'account_reset_password' %}" class="forgot-password">Forgot password?</a>
+        </div>
+        
+        <div class="form-field checkbox">
+          <input type="checkbox" name="remember" id="id_remember">
+          <label for="id_remember">Remember me</label>
+        </div>
+        
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
+        
+        <button type="submit" class="auth-button">{% trans "Sign In" %}</button>
+      </form>
+    {% endif %}
+
+    {% if SOCIALACCOUNT_ENABLED %}
+      <div class="social-auth-divider">
+        <span>OR</span>
+      </div>
+      <div class="social-auth-buttons">
+        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+      </div>
+    {% endif %}
+
+    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+      <div class="alternative-login-options">
+        {% if PASSKEY_LOGIN_ENABLED %}
+          <button type="submit" form="mfa_login" id="passkey_login" class="alt-auth-button">
+            <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+            </svg>
+            {% trans "Sign in with a passkey" %}
+          </button>
+        {% endif %}
+        
+        {% if LOGIN_BY_CODE_ENABLED %}
+          <a href="{{ request_login_code_url }}" class="alt-auth-button">
+            <svg class="button-icon" width="20" height="20" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            {% trans "Email me a sign-in code" %}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+  {{ block.super }}
+  {% if PASSKEY_LOGIN_ENABLED %}
+    {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+  {% endif %}
+{% endblock %}

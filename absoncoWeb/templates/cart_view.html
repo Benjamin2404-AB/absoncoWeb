@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 fw-bold text-center">Your Cart</h2>
+
+    {% if cart_items %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for cart_item in cart_items %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 cart-card">
+                        <!-- Item Image -->
+                        <div class="card-img-wrapper position-relative">
+                            <img src="{{ cart_item.item.image.url }}" class="card-img-top" alt="{{ cart_item.item.title }}">
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="card-body d-flex flex-column">
+                            <!-- Item Title -->
+                            <h5 class="card-title fw-bold">{{ cart_item.item.title|truncatechars:50 }}</h5>
+
+                            <!-- Price and Total -->
+                            <div class="clearfix mb-3">
+                                <span class="float-start text-muted">Price: <span class="text-primary fw-bold">{{ cart_item.item.price|cedi }}</span></span>
+                                <span class="float-end text-muted">Total: <span class="text-primary fw-bold cart-item-total" data-item-id="{{ cart_item.item.id }}">{{ cart_item.total_price|cedi }}</span></span>
+                            </div>
+
+                            <!-- Quantity Selector -->
+                            <div class="cart-counter mb-3">
+                                <button class="btn btn-outline-secondary btn-sm minus" data-item-id="{{ cart_item.item.id }}">-</button>
+                                <input type="number" class="quantity-input form-control d-inline-block text-center" value="{{ cart_item.quantity }}" data-item-id="{{ cart_item.item.id }}" style="width: 60px;">
+                                <button class="btn btn-outline-secondary btn-sm plus" data-item-id="{{ cart_item.item.id }}">+</button>
+                            </div>
+
+                            <!-- Remove Button -->
+                            <button class="remove-btn btn btn-danger btn-sm mt-auto" data-item-id="{{ cart_item.item.id }}">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Totals Section -->
+        <div class="d-flex justify-content-between align-items-center mt-5 p-4 bg-light rounded">
+            <h4 id="total-items" class="mb-0">Total Items: <span class="badge bg-secondary">{{ total_items }}</span></h4>
+            <h4 id="total-price" class="mb-0">Total Price: <span class="badge bg-primary">{{ cart_items|sum_total_price|cedi }}</span></h4>
+        </div>
+
+        <!-- Checkout Button -->
+        <div class="mt-4 text-center">
+            <a href="{% url 'payment:checkout' %}" class="btn btn-warning btn-lg">Proceed to Checkout</a>
+        </div>
+        
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            Your cart is empty.
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const updateCartUI = (data) => {
+            if (data.success) {
+                // Update total items and total price
+                document.querySelector('#total-items .badge').textContent = data.total_items;
+                document.querySelector('#total-price .badge').textContent = parseFloat(data.total_price).toLocaleString('en-US', { style: 'currency', currency: 'GHS' });
+
+                // If cart is empty, reload to show empty message
+                if (data.total_items === 0) {
+                    location.reload();
+                }
+            } else {
+                alert('Error updating cart');
+            }
+        };
+
+        // Quantity Adjustment (Plus/Minus Buttons)
+        document.querySelectorAll('.plus, .minus').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+                const quantityInput = this.closest('.cart-counter').querySelector('.quantity-input');
+                let currentQuantity = parseInt(quantityInput.value, 10);
+
+                // Adjust quantity
+                if (this.classList.contains('plus')) {
+                    currentQuantity += 1;
+                } else if (this.classList.contains('minus') && currentQuantity > 1) {
+                    currentQuantity -= 1;
+                } else {
+                    return; // Don't allow quantity to go below 1
+                }
+
+                quantityInput.value = currentQuantity;
+
+                // Send update request to the server
+                fetch('/update_cart_quantity/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        item_id: itemId,
+                        quantity: currentQuantity
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the item total price in the UI
+                        const itemTotalElement = document.querySelector(`.cart-item-total[data-item-id="${itemId}"]`);
+                        itemTotalElement.textContent = parseFloat(data.item_total).toLocaleString('en-US', { style: 'currency', currency: 'GHS' });
+
+                        // Update overall totals
+                        updateCartUI(data);
+                    } else {
+                        alert('Error updating quantity');
+                        quantityInput.value = data.current_quantity || currentQuantity; // Revert on error
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred: ' + error);
+                    quantityInput.value = currentQuantity; // Revert on error
+                });
+            });
+        });
+
+        // Manual Input Handling for Quantity
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const itemId = this.getAttribute('data-item-id');
+                let newQuantity = parseInt(this.value, 10);
+
+                // Validate input
+                if (newQuantity < 1 || isNaN(newQuantity)) {
+                    this.value = 1;
+                    newQuantity = 1;
+                }
+
+                // Send update request to the server
+                fetch('/update_cart_quantity/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        item_id: itemId,
+                        quantity: newQuantity
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the item total price in the UI
+                        const itemTotalElement = document.querySelector(`.cart-item-total[data-item-id="${itemId}"]`);
+                        itemTotalElement.textContent = parseFloat(data.item_total).toLocaleString('en-US', { style: 'currency', currency: 'GHS' });
+
+                        // Update overall totals
+                        updateCartUI(data);
+                    } else {
+                        alert('Error updating quantity');
+                        this.value = data.current_quantity || 1; // Revert on error
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred: ' + error);
+                    this.value = 1; // Revert on error
+                });
+            });
+        });
+
+        // Remove Item
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+
+                // Send a POST request to remove the item from the cart
+                fetch('/remove_from_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ 'item_id': itemId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        this.closest('.col').remove(); // Remove the card from the DOM
+
+                        // Update totals
+                        updateCartUI(data);
+                    } else {
+                        alert('Error removing item from cart');
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred: ' + error);
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Container Styling */
+    .container {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Header Styling */
+    h2 {
+        color: #01039D; /* Deep blue for headings */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Cart Card Styling */
+    .cart-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        overflow: hidden;
+        position: relative;
+    }
+    .cart-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+    .card-img-wrapper {
+        position: relative;
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+    .cart-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .card-body {
+        padding: 1.25rem;
+    }
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #000000;
+    }
+    .text-primary {
+        color: #01039D !important; /* Deep blue for price and total */
+    }
+    .text-muted {
+        font-size: 0.9rem;
+    }
+
+    /* Quantity Selector */
+    .cart-counter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .cart-counter .btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .cart-counter .btn:hover {
+        background-color: #01039D;
+        color: #FFFFFF;
+        border-color: #01039D;
+    }
+    .cart-counter input {
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        font-size: 1rem;
+    }
+
+    /* Remove Button Styling */
+    .remove-btn {
+        background-color: #dc3545;
+        border: none;
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .remove-btn:hover {
+        background-color: #c82333;
+    }
+    .remove-btn i {
+        margin-right: 5px;
+    }
+
+    /* Totals Section Styling */
+    .bg-light {
+        background-color: #f5f7fa !important;
+    }
+    #total-items, #total-price {
+        font-weight: 600;
+        color: #01039D;
+    }
+    #total-items .badge, #total-price .badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+    #total-price .badge {
+        background-color: #01039D !important;
+    }
+
+    /* Checkout Button Styling */
+    .btn-warning {
+        background-color: #FFC107;
+        border-color: #FFC107;
+        color: #000000;
+        font-weight: 400;
+        padding: 0.75rem 1.5rem;
+        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    }
+    .btn-warning:hover {
+        background-color: #E8A700;
+        border-color: #E8A700;
+        color: #000000;
+    }
+
+    /* Empty Cart Alert */
+    .alert-warning {
+        font-size: 1.1rem;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 575.98px) {
+        .container {
+            max-width: 95%;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        .card-img-top {
+            height: 150px;
+        }
+        .card-title {
+            font-size: 1rem;
+        }
+        .text-muted {
+            font-size: 0.8rem;
+        }
+        .cart-counter .btn {
+            width: 35px;
+            height: 35px;
+            font-size: 1rem;
+        }
+        .cart-counter input {
+            width: 50px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+        .remove-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        #total-items, #total-price {
+            font-size: 1rem;
+        }
+        #total-items .badge, #total-price .badge {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+        }
+        .btn-warning {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .container {
+            max-width: 90%;
+        }
+        .card-img-top {
+            height: 180px;
+        }
+    }
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+        .card-img-top {
+            height: 190px;
+        }
+    }
+</style>
+{% endblock %}

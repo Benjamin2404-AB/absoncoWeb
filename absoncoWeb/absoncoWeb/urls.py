@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from debug_toolbar.toolbar import debug_toolbar_urls # type: ignore
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('',include('core.urls',namespace='core'))
-]
+    path('',include('core.urls',namespace='core')),
+    path('payment/',include('payment.urls',namespace='payment')),
+    
+] + debug_toolbar_urls()

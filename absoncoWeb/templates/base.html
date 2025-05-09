@@ -3,152 +3,506 @@
 <html lang="en">
 <head>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absonco Enterprise - Home of Quality</title>
-    {% comment %} <link rel="stylesheet" href="{% static 'g.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static 'landpage2.css' %}">
-    <!-- Option 1: Include in HTML -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static '/itemDes.css' %}">
-    <link rel="stylesheet" href="{% static '/search_page.css' %}">
-
-
-
-<link href="https://fonts.cdnfonts.com/css/nexa-bold" rel="stylesheet">
-                
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'itemDes.css' %}">
+    <link rel="stylesheet" href="{% static 'search_page.css' %}">
+    <link href="{% static 'login.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Apply Geist font globally with a lighter base weight */
+        body {
+            font-family: 'Geist', sans-serif;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #01039D;
+            padding: 1rem 2rem;
+            z-index: 50;
+        }
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            width: 100%;
+        }
+        .navbar-nav .nav-link {
+            color: #E5E7EB;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #00CED1;
+        }
+        .dropdown-menu {
+            background-color: #0830A1;
+            border: none;
+            border-radius: 0.375rem;
+            margin-top: 0.5rem;
+        }
+        .dropdown-item {
+            color: #E5E7EB;
+            padding: 0.5rem 1rem;
+            font-weight: 400;
+        }
+        .dropdown-item:hover {
+            background-color: #0494DF;
+            color: #FFFFFF;
+        }
+
+        /* Search box area */
+        #search-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            width: 100%;
+            padding: 1rem 0;
+            margin-top: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        #search-box .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo {
+            height: 2rem;
+        }
+        #search-box .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        #search-box .form-inline {
+            display: flex;
+            align-items: center;
+        }
+        #search-box .input-group {
+            display: flex;
+            align-items: center;
+        }
+        #search-box .form-control {
+            width: 24rem;
+            border: none;
+            border-radius: 1.5rem 0 0 1.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem; /* Slightly smaller for consistency */
+            font-weight: 400;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        #search-box .form-control:focus {
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #f8fafc;
+        }
+        #search-box .btn-outline-success {
+            background-color: #42A5F5;
+            color: #000000;
+            border: none;
+            border-radius: 0 1.5rem 1.5rem 0;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem; /* Slightly smaller for consistency */
+            font-weight: 400;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        #search-box .btn-outline-success:hover {
+            background-color: #1E90FF;
+            box-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+        }
+        #search-box .btn-outline-success i {
+            font-size: 1rem;
+        }
+        #search-box .position-relative {
+            position: relative;
+        }
+        #search-box .fa-shopping-cart {
+            color: #0494DF;
+            font-size: 1.5rem;
+        }
+        #search-box #cart-count {
+            background-color: #00CED1;
+            color: #000000;
+            width: 1.25rem;
+            height: 1.25rem;
+            font-size: 0.75rem;
+            top: -0.25rem;
+            right: -0.25rem;
+            font-weight: 400;
+        }
+        #UserDetails {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        #UserDetails i, #userD {
+            color: #01039D;
+            font-weight: 400;
+        }
+        #UserDetails i {
+            font-size: 1.5rem;
+        }
+        #UserDetails #userD {
+            margin: 0;
+            line-height: 1;
+            font-size: 0.9rem;
+        }
+        #UserDetails .logout-btn {
+            background-color: #42A5F5;
+            color: #000000;
+            border: none;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        #UserDetails .logout-btn:hover {
+            background-color: #1E90FF;
+            box-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+        }
+        #UserDetails button {
+            background-color: #42A5F5;
+            color: #000000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 400;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        #UserDetails button a {
+            color: #000000;
+            text-decoration: none;
+        }
+        #UserDetails button:hover {
+            background-color: #1E90FF;
+            box-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+        }
+
+        /* Placeholder for price elements */
+        .price {
+            font-weight: 700;
+        }
+
+        /* Content area */
+        .content {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .content .container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #01039D;
+            color: #E5E7EB;
+            padding: 1.5rem 0;
+            margin-top: 1.5rem;
+        }
+        .footer .container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer .nav-link {
+            color: #FFFFFF;
+            font-weight: 400;
+            font-size: 0.9rem;
+            position: relative;
+            transition: color 0.3s ease-in-out;
+        }
+        .footer .nav-link:hover {
+            color: #00CED1;
+        }
+        .footer .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #00CED1;
+            transition: width 0.3s ease-in-out;
+        }
+        .footer .nav-link:hover::after {
+            width: 100%;
+        }
+        .footer .btn-primary {
+            background-color: #42A5F5;
+            border-color: #42A5F5;
+            color: #000000;
+            font-weight: 400;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .footer .btn-primary:hover {
+            background-color: #1E90FF;
+            border-color: #1E90FF;
+            box-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+        }
+        .footer h5 {
+            font-weight: 400;
+            font-size: 1.1rem;
+        }
+        .footer p {
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+        .footer .divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 1.5rem 0 1rem;
+        }
+        #bot {
+            text-align: center;
+        }
+        #copyright {
+            color: rgba(255, 255, 255, 0.708);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        .logout-btn {
+            text-decoration: none;
+        }
+
+        /* Social media icons in footer */
+        .sm {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+        }
+        .social-icon {
+            color: #E5E7EB;
+            font-size: 1.2rem;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .social-icon:hover {
+            color: #00CED1;
+            transform: scale(1.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #search-box .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            #search-box .form-control {
+                width: 14rem; /* Reduced from 18rem */
+                padding: 0.6rem 1rem; /* Smaller padding */
+                font-size: 0.85rem; /* Smaller font size */
+            }
+            #search-box .btn-outline-success {
+                padding: 0.6rem 0.8rem; /* Smaller padding */
+                font-size: 0.85rem; /* Smaller font size */
+            }
+            #search-box .btn-outline-success i {
+                font-size: 0.9rem; /* Smaller icon */
+            }
+            .navbar-nav {
+                gap: 1rem;
+            }
+            .navbar-nav .nav-link {
+                font-size: 0.9rem;
+            }
+            .footer {
+                padding: 1rem 0;
+            }
+            .footer h5 {
+                font-size: 1rem;
+            }
+            .footer p {
+                font-size: 0.85rem;
+            }
+            .footer .nav-link {
+                font-size: 0.85rem;
+            }
+            #copyright {
+                font-size: 0.8rem;
+            }
+            .sm {
+                gap: 1rem;
+                margin-top: 0.5rem;
+            }
+            .social-icon {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light">
-      <img class="logo"  src="{% static 'logo.png' %}">
-        {% comment %} <a class="navbar-brand" href="#">Absonco Enterprise</a> {% endcomment %}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <!-- Search Box Area -->
+    <div class="w-100" id="search-box">
+        <div class="container">
+            <img class="logo" src="{% static 'media/LOGOABSONCO.png' %}">
+            <div class="search-container">
+                <form class="form-inline" action="{% url 'core:search' %}">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search" id="search" name="q" class="form-control">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <a href="{% url 'core:cart_view' %}" class="position-relative">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    {% if request.user.is_authenticated %}
+                    <h6 id="cart-count" class="badge bg-primary text-white rounded-circle d-flex justify-content-center align-items-center position-absolute">
+                        {{ cart_count|default:0 }}
+                    </h6>
+                    {% endif %}
+                </a>
+            </div>
+            <div id="UserDetails">
+                {% if request.user.is_authenticated %}
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <h6 id="userD">{{ request.user.username|upper }}</h6>
+                    <a href="{% url 'account_logout' %}" class="logout-btn" title="Logout">
+                        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    </a>
+                {% else %}
+                    <button><a href="{% url 'account_login' %}">Login</a></button>
+                    <button><a href="{% url 'account_signup' %}">Sign Up</a></button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-          <!---  **Navbar Tabs** -->
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-                 <!---  **Home** -->
-            <li class="nav-item active">
-              <a class="nav-link" href={% url 'core:landing_page' %}>Home</a>
-            </li>
-             <!---  **Electronics** -->
-            <li class="nav-item">
-              <a class="nav-link" href="#">Electronics</a>
-            </li>
-             <!---  **Electricals** -->
-            <li class="nav-item">
-              <a class="nav-link" href="#">Electricals</a>
-            </li>
-             <!---  **Refrigeration** -->
-            <li class="nav-item">
-              <a class="nav-link" href="#">Refrigeration</a>
-            </li>
-             <!---  **Deals** -->
-            <li class="nav-item">
-              <a class="nav-link" href="#">Deals</a>
-            </li>
-             <!---  **Services** -->
-            <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
-            </li>
-             <!---  **Collection** -->
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Collections
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="https://wa.me/233275650233" target="_blank">WhatsApp</a></li>
-                <li><a class="dropdown-item" href="#">TikTok</a></li>
-                <li><a class="dropdown-item" href="#">Instagram</a></li>
-              </ul>
-            </li>
-            {% if request.user.is_authenticated %}
-            <li class="nav-item" id="UserDetails">
-                <i class="fa fa-user-circle" aria-hidden="true"></i>
-                <h6 id="userD">{{ request.user.username|upper}}</h6>
-               
-                <button type="button" class="btn btn-light"><a href="{% url  'account_logout' %}">Log Out</a></button>
-                {% comment %} <button type="button" class="btn btn-dark">Sign Up</button> {% endcomment %}
-            </li>
-            {% else %}
-            <li class="nav-item" id="UserDetails">
-              <button><a href="{% url  'account_login' %}">Login<a/></button>
-              <button>Sign Up</button>
-              {% comment %} <i class="fa fa-user-circle" aria-hidden="true"></i><span id="username">{username}</span> {% endcomment %}
-             
-              <!---<button type="button" class="btn btn-light">Login</button>
-              <button type="button" class="btn btn-dark">Sign Up</button>-->
-          </li>
-            {%endif%}
-          </ul>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'core:landing_page' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Electronics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Electricals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Refrigeration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Deals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Collections
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'core:whatsapp_redirect' %}">WhatsApp</a></li>
+                            <li><a class="dropdown-item" href="#">TikTok</a></li>
+                            <li><a class="dropdown-item" href="#">Instagram</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-     <!-- Search Box -->
-     <div class="SearchBox">
-      <form class="form-inline" action={% url 'core:search' %}>
-        <div class="input-group">
-          <input type="text" placeholder="Search" id="search" name="q" class="form-control w-50">
-          <div class="input-group-append">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </div>
-        </div>
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-      </form>
-    </div>
     
-    
+
     <!-- Main Content -->
     <div class="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <!--Footer-->
-    <div class="foot">
-      <footer class="py-5">
-        <div class="row">
-          
-    
-          <div class="col-6 col-md-2 mb-3">
-            <h5>Section</h5>
-            <ul class="nav flex-column">
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
-            </ul>
-          </div>
-    
-
-    
-          <div class="col-md-5 offset-md-1 mb-3">
-            <form>
-              <h5>Subscribe to our newsletter</h5>
-              <p>Monthly digest of what's new and exciting from us.</p>
-              <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                <label for="newsletter1" class="visually-hidden">Email address</label>
-                <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
-                <button class="btn btn-primary" type="button">Subscribe</button>
-              </div>
-            </form>
-          </div>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
         </div>
-    
-        <div id='bot'>
-          <p id="copyright" style="color:rgba(255, 255, 255, 0.708);">© 2022 Company, Inc. All rights reserved.</p> 
-          <div class="sm">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64h98.2V334.2H109.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H255V480H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M194.4 211.7a53.3 53.3 0 1 0 59.3 88.7 53.3 53.3 0 1 0 -59.3-88.7zm142.3-68.4c-5.2-5.2-11.5-9.3-18.4-12c-18.1-7.1-57.6-6.8-83.1-6.5c-4.1 0-7.9 .1-11.2 .1c-3.3 0-7.2 0-11.4-.1c-25.5-.3-64.8-.7-82.9 6.5c-6.9 2.7-13.1 6.8-18.4 12s-9.3 11.5-12 18.4c-7.1 18.1-6.7 57.7-6.5 83.2c0 4.1 .1 7.9 .1 11.1s0 7-.1 11.1c-.2 25.5-.6 65.1 6.5 83.2c2.7 6.9 6.8 13.1 12 18.4s11.5 9.3 18.4 12c18.1 7.1 57.6 6.8 83.1 6.5c4.1 0 7.9-.1 11.2-.1c3.3 0 7.2 0 11.4 .1c25.5 .3 64.8 .7 82.9-6.5c6.9-2.7 13.1-6.8 18.4-12s9.3-11.5 12-18.4c7.2-18 6.8-57.4 6.5-83c0-4.2-.1-8.1-.1-11.4s0-7.1 .1-11.4c.3-25.5 .7-64.9-6.5-83l0 0c-2.7-6.9-6.8-13.1-12-18.4zm-67.1 44.5A82 82 0 1 1 178.4 324.2a82 82 0 1 1 91.1-136.4zm29.2-1.3c-3.1-2.1-5.6-5.1-7.1-8.6s-1.8-7.3-1.1-11.1s2.6-7.1 5.2-9.8s6.1-4.5 9.8-5.2s7.6-.4 11.1 1.1s6.5 3.9 8.6 7s3.2 6.8 3.2 10.6c0 2.5-.5 5-1.4 7.3s-2.4 4.4-4.1 6.2s-3.9 3.2-6.2 4.2s-4.8 1.5-7.3 1.5l0 0c-3.8 0-7.5-1.1-10.6-3.2zM448 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96zM357 389c-18.7 18.7-41.4 24.6-67 25.9c-26.4 1.5-105.6 1.5-132 0c-25.6-1.3-48.3-7.2-67-25.9s-24.6-41.4-25.8-67c-1.5-26.4-1.5-105.6 0-132c1.3-25.6 7.1-48.3 25.8-67s41.5-24.6 67-25.8c26.4-1.5 105.6-1.5 132 0c25.6 1.3 48.3 7.1 67 25.8s24.6 41.4 25.8 67c1.5 26.3 1.5 105.4 0 131.9c-1.3 25.6-7.1 48.3-25.8 67z"/></svg>
-         </div>
-       </div>
+    </div>
 
-      </footer>
+    <!-- Footer -->
+    <div class="footer">
+        <footer class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-2 mb-3">
+                        <h5>Section</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Home</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Features</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Pricing</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0">FAQs</a></li>
+                            <li class="nav-item mb-2"><a href="#" class="nav-link p-0">About</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-5 offset-md-1 mb-3">
+                        <form>
+                            <h5>Subscribe to our newsletter</h5>
+                            <p>Monthly digest of what's new and exciting from us.</p>
+                            <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                                <label for="newsletter1" class="visually-hidden">Email address</label>
+                                <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                                <button class="btn btn-primary" type="button">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div id="bot">
+                    <p id="copyright">© 2022 Company, Inc. All rights reserved.</p>
+                    <div class="sm d-flex justify-content-center gap-3">
+                        <a href="{% url 'core:facebook_redirect' %}" class="social-icon" title="Facebook" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="{% url 'core:whatsapp_redirect' %}" class="social-icon" title="WhatsApp" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="{% url 'core:twitter_redirect' %}" class="social-icon" title="Twitter/X" target="_blank">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="{% url 'core:instagram_redirect' %}" class="social-icon" title="Instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@absonco" class="social-icon" title="TikTok" target="_blank">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- Scripts -->
@@ -156,57 +510,8 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
     <script src="{% static 'animation.js' %}"></script>
-
-
-
-    
-<script>
-  // Ensure the DOM is fully loaded
-  document.addEventListener("DOMContentLoaded", function() {
-      let value = 1;
-
-      let minusButton = document.querySelector(".minus");
-      let addButton = document.querySelector(".add");
-      let display = document.getElementById("display");
-
-      // Function to increment
-      function increment() {
-          value++;
-          updateDisplay();
-      }
-      console.log(minusButton, addButton, display);
-
-      // Function to decrement
-      function decrement() {
-          if (value > 0) {
-              value--;
-             
-             
-          }
-          minusButton.disabled = display === 1 ? true : false;
-         
-
-          updateDisplay();
-
-      }
-
-      // Function to update the display
-      function updateDisplay() {
-        display.value = value;
-      }
-
-      // Attach event listeners
-      minusButton.addEventListener("click", decrement);
-      addButton.addEventListener("click", increment);
-  });
-</script>
-
-    
 </body>
 </html>

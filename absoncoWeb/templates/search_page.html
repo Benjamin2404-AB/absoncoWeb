@@ -1,54 +1,449 @@
 {% extends "base.html" %}
 {% load custom_filters %}
+{% load static %}
+
 {% block content %}
-<h2 id='srHeader'>Search Results</h2>
+<h2 id="srHeader" class="text-center mb-4 fw-bold">Search Results</h2>
+
 {% if items %}
-    <ul class = "sResults">
+<div class="container-fluid bg-transparent justify-content-center my-4 p-3" style="position: relative; width: 85%; margin: 0 auto;">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"> <!-- Reduced gap to match landing page -->
         {% for item in items %}
-            <li>
-                <img src={{item.image.url}}/>
-                <div class="it">
-
-                <h3>{{ item.title }}</h3>
-                <h4 id='price'>{{ item.price|cedi }}</h4>
-                <p>{{ item.description }}</p>
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 product-card">
+                <div class="card-img-wrapper position-relative">
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                    <div class="card-icons">
+                        <button class="btn btn-icon btn-heart" aria-label="Add to Wishlist">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn btn-icon btn-cart add-to-cart-btn" 
+                                data-item-id="{{ item.id }}" 
+                                data-item-slug="{{ item.slug }}" 
+                                data-item-title="{{ item.title }}"
+                                aria-label="Add to Cart">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
                 </div>
-              
-            </li>
+                <div class="card-body d-flex flex-column">
+                    <div class="clearfix mb-2"> <!-- Reduced margin -->
+                        <span class="float-start badge rounded-pill bg-primary">{{ item.brand }}</span>
+                        <div class="float-end price-container">
+                            {% if item.discountprice %}
+                                <del class="text-muted small me-1">{{ item.price|cedi }}</del>
+                                <span class="price-hp text-primary fw-bold">{{ item.discountprice|cedi }}</span>
+                            {% else %}
+                                <span class="price-hp text-primary fw-bold">{{ item.price|cedi }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h5 class="card-title fw-bold">{{ item.title|truncatechars:50 }}</h5> <!-- Reduced truncatechars to match landing page -->
+                    <div class="mt-auto">
+                        <a href="{% url 'core:item_description' item_slug=item.slug pk=item.id %}" class="btn btn-warning w-100 check-offer-btn">Check Offer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 
-    <div class="pagination">
-        <span class="step-links">
-            <!-- Previous Link (always visible but disabled on first page) -->
-            {% if page_obj.has_previous %}
-                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" id="prev">Prev</a>
-            {% else %}
-                <span class="disabled" id="prev">Prev</span>
-            {% endif %}
-    
-            <!-- Page Numbers -->
-            <span class="avpages">
-                {% for num in page_obj.paginator.page_range %}
+<div class="pagination d-flex justify-content-center my-4">
+    <span class="step-links d-flex align-items-center gap-2">
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary" id="prev">Prev</a>
+        {% else %}
+            <span class="btn btn-outline-secondary disabled" id="prev">Prev</span>
+        {% endif %}
+
+        <span class="avpages d-flex gap-1">
+            {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                    <a href="?q={{ query }}&page={{ num }}" id="current">{{ num }}</a>
+                    <a href="?q={{ query }}&page={{ num }}" class="btn btn-primary" id="current">{{ num }}</a>
                 {% else %}
-                    <a href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                    <a href="?q={{ query }}&page={{ num }}" class="btn btn-outline-primary">{{ num }}</a>
                 {% endif %}
             {% endfor %}
-            
-            </span>
-    
-            <!-- Next Link (always visible but disabled on last page) -->
-            {% if page_obj.has_next %}
-                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" id="next">Next</a>
-            {% else %}
-                <span class="disabled" id="next">Next</span>
-            {% endif %}
         </span>
-    </div>
-    
+
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" class="btn btn-outline-primary" id="next">Next</a>
+        {% else %}
+            <span class="btn btn-outline-secondary disabled" id="next">Next</span>
+        {% endif %}
+    </span>
+</div>
+
 {% else %}
-    <p>No items found matching your search criteria.</p>
+    <p class="text-center text-muted my-5">No items found matching your search criteria.</p>
 {% endif %}
+
+<!-- Snackbar Container -->
+<div id="snackbar" class="snackbar"></div>
+
+<style>
+    /* Header Styling */
+    #srHeader {
+        color: #01039D; /* Deep blue for headings */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 1.5rem; /* Match landing page section titles */
+    }
+
+    /* Product Cards */
+    .product-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid transparent; /* For cyan border on hover */
+    }
+    .product-card:hover {
+        transform: translateY(-3px); /* Match landing page */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important; /* Match landing page */
+        border-color: #00CED1; /* Cyan border on hover */
+    }
+    .card-img-wrapper {
+        position: relative;
+    }
+    .card-img-top {
+        height: 160px; /* Match landing page */
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+    .product-card:hover .card-img-top {
+        transform: scale(1.03); /* Match landing page */
+    }
+    .card-icons {
+        position: absolute;
+        top: 8px; /* Match landing page */
+        right: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* Match landing page */
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    .product-card:hover .card-icons {
+        opacity: 1;
+    }
+    .btn-icon {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 35px; /* Match landing page */
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .btn-icon i {
+        font-size: 1rem; /* Match landing page */
+    }
+    .btn-heart i {
+        color: #0494DF; /* Light blue for heart */
+    }
+    .btn-heart:hover i {
+        color: #ff4d4d; /* Red on hover for heart */
+    }
+    .btn-cart i {
+        color: #01039D; /* Deep blue for cart */
+    }
+    .btn-cart:hover {
+        background-color: #0494DF; /* Light blue on hover */
+    }
+    .btn-cart:hover i {
+        color: #FFFFFF;
+    }
+    .btn-icon:hover {
+        transform: scale(1.05); /* Match landing page */
+    }
+    .card-body {
+        padding: 1rem; /* Match landing page */
+    }
+    .card-title {
+        font-size: 1rem; /* Match landing page */
+        margin-bottom: 0.4rem;
+        color: #000000;
+    }
+    .price-container {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+    .price-container del {
+        font-size: 0.8rem; /* Slightly smaller than the main price */
+        color: #6c757d; /* Matches text-muted */
+    }
+    .price-container .price-hp {
+        font-size: 0.9rem; /* Match landing page */
+        color: #01039D !important; /* Deep blue for price */
+    }
+    .badge.bg-primary {
+        background-color: #00CED1 !important; /* Cyan for badges */
+        font-weight: 400;
+        font-size: 0.75rem; /* Match landing page */
+        color: #000000; /* Black text for contrast */
+        transition: background-color 0.3s ease-in-out;
+    }
+    .badge.bg-primary:hover {
+        background-color: #00B7BD !important; /* Slightly darker cyan on hover */
+    }
+
+    /* Button Styling */
+    .btn-warning {
+        background-color: #42A5F5; /* Match landing page */
+        border-color: #42A5F5;
+        color: #000000;
+        font-weight: 400;
+        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        position: relative; /* For pseudo-elements */
+    }
+    .btn-warning:hover {
+        background-color: #1E90FF; /* Match landing page */
+        border-color: #1E90FF;
+        color: #000000;
+        box-shadow: 0 0 8px rgba(0, 206, 209, 0.5); /* Cyan glow on hover */
+    }
+    .check-offer-btn {
+        overflow: hidden;
+    }
+    .check-offer-btn::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #00CED1; /* Cyan underline */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    .check-offer-btn:hover::after {
+        transform: translateX(0);
+    }
+
+    /* Pagination Styling */
+    .pagination .step-links {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Match landing page spacing */
+    }
+    .pagination .avpages {
+        display: flex;
+        gap: 5px;
+    }
+    .pagination .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease-in-out;
+    }
+    .pagination .btn-outline-primary {
+        color: #01039D;
+        border-color: #01039D;
+    }
+    .pagination .btn-outline-primary:hover {
+        background-color: #01039D;
+        color: #FFFFFF;
+        box-shadow: 0 0 8px rgba(0, 206, 209, 0.5); /* Cyan glow on hover */
+    }
+    .pagination .btn-primary {
+        background-color: #01039D;
+        border-color: #01039D;
+        color: #FFFFFF;
+    }
+    .pagination .btn-primary:hover {
+        background-color: #0830A1; /* Slightly lighter blue on hover */
+        border-color: #0830A1;
+        box-shadow: 0 0 8px rgba(0, 206, 209, 0.5); /* Cyan glow on hover */
+    }
+    .pagination .btn-outline-secondary.disabled {
+        color: #6c757d;
+        border-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    /* Snackbar Styling */
+    .snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        font-size: 0.9rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: visibility 0s, opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .snackbar.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    .snackbar.success {
+        background-color: #28a745; /* Green for success */
+    }
+    .snackbar.error {
+        background-color: #dc3545; /* Red for error */
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 575.98px) {
+        .container-fluid {
+            width: 95% !important;
+            padding: 0.75rem; /* Match landing page mobile */
+        }
+        #srHeader {
+            font-size: 1.3rem; /* Match landing page mobile */
+        }
+        .card-img-top {
+            height: 130px; /* Match landing page mobile */
+        }
+        .card-title {
+            font-size: 0.9rem; /* Match landing page mobile */
+        }
+        .price-container del {
+            font-size: 0.75rem; /* Match landing page mobile */
+        }
+        .price-container .price-hp {
+            font-size: 0.85rem; /* Match landing page mobile */
+        }
+        .card-icons {
+            opacity: 1; /* Always visible on mobile for usability */
+        }
+        .btn-icon {
+            width: 30px; /* Match landing page mobile */
+            height: 30px;
+            font-size: 0.9rem;
+        }
+        .btn-icon i {
+            font-size: 0.9rem; /* Match landing page mobile */
+        }
+        .pagination .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        .btn-warning {
+            padding: 0.4rem 1rem; /* Match landing page mobile */
+            font-size: 0.85rem;
+        }
+        .snackbar {
+            min-width: 200px;
+            font-size: 0.8rem;
+            padding: 12px;
+            bottom: 20px;
+        }
+    }
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .container-fluid {
+            width: 90% !important;
+        }
+        #srHeader {
+            font-size: 1.4rem;
+        }
+        .card-img-top {
+            height: 150px; /* Match landing page */
+        }
+        .card-title {
+            font-size: 0.95rem;
+        }
+        .price-container del {
+            font-size: 0.8rem; /* Match landing page */
+        }
+        .price-container .price-hp {
+            font-size: 0.85rem; /* Match landing page */
+        }
+        .snackbar {
+            min-width: 220px;
+            font-size: 0.85rem;
+        }
+    }
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+        .card-img-top {
+            height: 150px; /* Match landing page */
+        }
+        .card-title {
+            font-size: 0.95rem;
+        }
+        .price-container del {
+            font-size: 0.8rem; /* Match landing page */
+        }
+        .price-container .price-hp {
+            font-size: 0.85rem; /* Match landing page */
+        }
+        .snackbar {
+            min-width: 240px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        const cartCountElement = document.getElementById('cart-count');
+        const snackbar = document.getElementById('snackbar');
+        const isAuthenticated = {{ user.is_authenticated|lower }};
+
+        // Function to show Snackbar
+        function showSnackbar(message, type) {
+            snackbar.textContent = message;
+            snackbar.className = `snackbar show ${type}`;
+            setTimeout(() => {
+                snackbar.className = 'snackbar';
+            }, 3000);
+        }
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (!isAuthenticated) {
+                    showSnackbar('Please log in to add items to your cart.', 'error');
+                    setTimeout(() => {
+                        window.location.href = "{% url 'account_login' %}?next=" + encodeURIComponent(window.location.pathname);
+                    }, 1500);
+                    return;
+                }
+
+                const itemId = this.getAttribute('data-item-id');
+                const itemSlug = this.getAttribute('data-item-slug');
+                const itemTitle = this.getAttribute('data-item-title');
+                const quantity = 1;
+
+                fetch("{% url 'core:add_to_cart' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({
+                        item_id: itemId,
+                        quantity: quantity
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (cartCountElement) {
+                            cartCountElement.textContent = data.total_items;
+                        }
+                        showSnackbar(`Added ${data.item.quantity} x ${itemTitle} to your cart!`, 'success');
+                    } else {
+                        showSnackbar(data.message || "Something went wrong!", 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    showSnackbar("An error occurred while adding to the cart.", 'error');
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}

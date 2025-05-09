@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4 text-center">
+    <h2 style="color: #01039D; font-family: 'Geist', sans-serif; font-weight: 500;">Payment Successful</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="color: #01039D; font-family: 'Geist', sans-serif; font-weight: 400;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #01039D; font-family: 'Geist', sans-serif; font-weight: 400;">
+            Thank you for your purchase! Your order has been processed.
+        </p>
+    {% endif %}
+    <a href="{% url 'core:landing_page' %}" class="btn" style="background-color: #42A5F5; color: #000000; font-family: 'Geist', sans-serif; font-weight: 400; border-radius: 1rem;">
+        Return to Home
+    </a>
+</div>
+{% endblock %}
