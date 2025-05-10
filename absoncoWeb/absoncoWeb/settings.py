@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-(fbi#61aqmdvkahu%0d#a^f)x2x*a^3nm6cu*5qs+&_5zt#fp9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://absoncoenterprise.onrender.com', 'localhost',]
 
 # static files configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
