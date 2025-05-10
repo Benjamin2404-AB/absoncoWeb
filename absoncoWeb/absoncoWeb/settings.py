@@ -184,13 +184,17 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Redirect after login
 
 
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
+# Payment URLs
+PAYMENT_SUCCESS_URL = f"{BASE_URL}/payment/success/"
+PAYMENT_CANCEL_URL = f"{BASE_URL}/payment/cancel/"
 
 
 # PAYSTACK_PUBLISHABLE_KEY = os.environ.get('PAYSTACK_PUBLISHABLE_KEY')
-PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
-PAYMENT_SUCCESS_URL = 'http://localhost:8000/payment/success/'
-PAYMENT_CANCEL_URL = 'http://localhost:8000/payment/cancel/'
+# PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+# PAYMENT_SUCCESS_URL = 'http://localhost:8000/payment/success/'
+# PAYMENT_CANCEL_URL = 'http://localhost:8000/payment/cancel/'
 
 
 
