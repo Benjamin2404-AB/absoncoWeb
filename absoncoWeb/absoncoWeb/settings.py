@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(fbi#61aqmdvkahu%0d#a^f)x2x*a^3nm6cu*5qs+&_5zt#fp9'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://absoncoenterprise.onrender.com', 'localhost',]
+ALLOWED_HOSTS = ['https://absoncoenterprise.onrender.com', 'localhost','http://0.0.0.0:10000']
 
 # static files configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -209,6 +209,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') # Not your regular p
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
+    "http://0.0.0.0:10000"
     # ...
 ]
 
