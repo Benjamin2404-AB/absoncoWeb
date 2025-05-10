@@ -7,13 +7,13 @@
     <h2 class="text-center" style="color: #01039D; font-family: 'Geist', sans-serif; font-weight: 500;">Checkout</h2>
     <div class="card p-4" style="max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
         <h4 style="color: #01039D; font-weight: 400;">Order Summary</h4>
-        {% if messages %}
+        {% comment %} {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
             {% endfor %}
-        {% endif %}
+        {% endif %} {% endcomment %}
         {% if error %}
-            <div class="alert alert-warning text-center">{{ error }}</div>
+            {% comment %} <div class="alert alert-warning text-center">{{ error }}</div> {% endcomment %}
         {% elif not order.items.exists %}
             <div class="alert alert-warning text-center">Your cart is empty.</div>
         {% else %}

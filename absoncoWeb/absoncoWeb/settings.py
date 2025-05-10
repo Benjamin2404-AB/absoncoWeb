@@ -184,7 +184,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'  # Redirect after login
 
 
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
 
 # Payment URLs
 PAYMENT_SUCCESS_URL = f"{BASE_URL}/payment/success/"
