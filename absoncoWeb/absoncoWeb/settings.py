@@ -43,7 +43,7 @@ STATIC_URL = '/static/'
 #     ]
 # else:
     # For production, collect static files into this directory
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles', 'static')
 
 # media files configuration (for user uploads)
 MEDIA_URL = '/media/'
