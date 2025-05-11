@@ -20,6 +20,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import cloudinary # type: ignore
+import cloudinary.uploader # type: ignore
+import cloudinary.api # type: ignore
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -67,6 +72,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'debug_toolbar',
     'payment',
+    'cloudinary',
+    'cloudinary_storage',
     
     # 'allauth.socialaccount',
     
@@ -74,6 +81,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.facebook',
 ]
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # settings.py
 ALLAUTH_UI_THEME = "light"
@@ -239,3 +248,12 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 SOCIALACCOUNT_ADAPTER = 'absoncoWeb.adapters.CustomSocialAccountAdapter'
+
+
+# CLOUDINARY CONFIGURATION
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
+)
