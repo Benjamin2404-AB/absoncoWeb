@@ -70,7 +70,7 @@
                             </button>
                         </div>
                     </div>
-                    <a href="{% url 'core:item_description' public_id=item.image pk=item.id %}" class="text-decoration-none">
+                    <a href="{% url 'core:item_description' public_id=item.slug pk=item.id %}" class="text-decoration-none">
                         <div class="card-body">
                             <h5 class="card-title text-dark fw-bold">{{ item.title|truncatechars:30 }}</h5>
                             <div class="price-container">
@@ -150,7 +150,7 @@
                         <h5 class="card-title fw-bold">{{ item.title|truncatechars:50 }}</h5>
                         <p class="card-text text-muted small flex-grow-1">{{ item.description|truncatechars:100 }}</p>
                         <div class="mt-auto">
-                            <a href="{% url 'core:item_description' public_id=item.image pk=item.id %}" class="btn btn-warning w-100 check-offer-btn">Check Offer</a>
+                            <a href="{% url 'core:item_description' public_id=item.slug pk=item.id %}" class="btn btn-warning w-100 check-offer-btn">Check Offer</a>
                         </div>
                     </div>
                 </div>
