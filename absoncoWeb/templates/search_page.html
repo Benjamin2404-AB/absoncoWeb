@@ -40,7 +40,7 @@
                     </div>
                     <h5 class="card-title fw-bold">{{ item.title|truncatechars:50 }}</h5> <!-- Reduced truncatechars to match landing page -->
                     <div class="mt-auto">
-                        <a href="{% url 'core:item_description' item_slug=item.slug pk=item.id %}" class="btn btn-warning w-100 check-offer-btn">Check Offer</a>
+                        <a href="{% url 'core:item_description' public_id=item.image pk=item.id %}" class="btn btn-warning w-100 check-offer-btn">Check Offer</a>
                     </div>
                 </div>
             </div>
