@@ -89,15 +89,14 @@ def search_page(request):
 #         item = get_object_or_404(Item, slug=item_slug, pk=pk)
 #         return item
     
-class ItemDescriptionView(DetailView): 
+class ItemDescriptionView(DetailView):
     model = Item
-    template_name = "item_description.html"
-    context_object_name = "item"
+    template_name = 'core/item_description.html'
 
-    def get_object(self, queryset=None):
+    def get_object(self):
         pk = self.kwargs.get('pk')
         public_id = self.kwargs.get('public_id')
-        return get_object_or_404(Item, pk=pk, image=public_id)
+        return get_object_or_404(Item, pk=pk, slug=public_id)
 
 
 
