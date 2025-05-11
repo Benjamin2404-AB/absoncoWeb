@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
-from jupyterlab_server import slugify
+from django.utils.text import slugify
+from cloudinary.models import CloudinaryField  
 
 ITEM_TYPE_CHOICES = [
     ("Electricals", "Electricals"),
@@ -9,12 +10,11 @@ ITEM_TYPE_CHOICES = [
     ("Accessories", "Accessories"),
     ("General", "General"),
 ]
-
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discountprice = models.FloatField(blank=True, null=True)
-    image = models.ImageField(upload_to="item_images/", default='a.jpg')
+    image = CloudinaryField('image', default='a.jpg')  # Use CloudinaryField
     itemType = models.CharField(max_length=50, choices=ITEM_TYPE_CHOICES)
     brand = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -29,6 +29,25 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
+# class Item(models.Model):
+#     title = models.CharField(max_length=100)
+#     price = models.FloatField()
+#     discountprice = models.FloatField(blank=True, null=True)
+#     image = models.ImageField(upload_to="item_images/", default='a.jpg')
+#     itemType = models.CharField(max_length=50, choices=ITEM_TYPE_CHOICES)
+#     brand = models.CharField(max_length=100)
+#     slug = models.SlugField(unique=True, blank=True, null=True)
+#     description = models.TextField(default="""Lorem Ipsum is simply dummy text...""")
+#     time_added = models.DateTimeField(auto_now_add=True)
+#     time_updated = models.DateTimeField(auto_now=True)
+
+#     def save(self, *args, **kwargs):
+#         if not self.slug:
+#             self.slug = slugify(self.title)
+#         super().save(*args, **kwargs)
+
+#     def __str__(self):
+#         return self.title
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
