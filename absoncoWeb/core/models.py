@@ -10,11 +10,12 @@ ITEM_TYPE_CHOICES = [
     ("Accessories", "Accessories"),
     ("General", "General"),
 ]
+# core/models.py
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discountprice = models.FloatField(blank=True, null=True)
-    image = CloudinaryField('image', default='a.jpg')  # Use CloudinaryField
+    image = CloudinaryField('image', blank=True, null=True)  # Remove default
     itemType = models.CharField(max_length=50, choices=ITEM_TYPE_CHOICES)
     brand = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, null=True)
