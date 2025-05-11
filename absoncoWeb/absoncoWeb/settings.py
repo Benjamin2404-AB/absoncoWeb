@@ -20,9 +20,9 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-import cloudinary # type: ignore
-import cloudinary.uploader # type: ignore
-import cloudinary.api # type: ignore
+import cloudinary 
+import cloudinary.uploader 
+import cloudinary.api
 
 
 
